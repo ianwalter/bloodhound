@@ -1,0 +1,2 @@
+defmodule Bloodhound do
+end
