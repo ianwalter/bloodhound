@@ -17,39 +17,58 @@ defmodule Bloodhound.Client do
   @doc """
   Deletes a document given a document type and ID.
   """
-  def delete(type, id) do
+  def delete(type \\ nil, id \\ nil) do
     type |> build_url(id) |> HTTPoison.delete |> parse_response
   end
 
   @doc """
   Searches an index and optionally a type.
   """
-  def search(type, data \\ nil) do
-    encoded_data = if data, do: Poison.encode! data, else: nil
-    type |> build_url |> HTTPoison.post(encoded_data) |> parse_response
+  def search(types \\ nil, data \\ %{}) do
+    IO.puts List.wrap(types) |> build_url("_search")
+    List.wrap(types)
+    |> build_url("_search")
+    |> HTTPoison.post(Poison.encode! data)
+    |> parse_response
   end
 
   @doc """
     Constructs an ElasticSearch API URL.
-    TODO investigate URL type, add params
+    TODO add params
   """
-  def build_url(type, id \\ nil), do: "#{@url}/#{@name}/#{type}/#{id}"
+  def build_url(type, id \\ nil) do
+    List.flatten([@url, @name, type, id])
+    |> Enum.filter(&(&1))
+    |> Enum.join("/")
+  end
 
   @doc """
   Parses a response from the ElasticSearch API into a happy map %{:)}.
   """
   def parse_response({status, response}) do
-    body = Poison.Parser.encode! response.body, keys: :atoms!
+    IO.inspect response
+    body = Poison.Parser.parse! response.body, keys: :atoms
     case status do
       :ok ->
 
         case body do
           %{hits: hits} -> {:ok, format_hits hits}
-          %{found: true} -> {:ok, format_doument body}
+          %{_source: _} -> {:ok, format_document body}
           _ -> {:ok, response.status_code}
         end
 
       _ -> {:error, body}
+    end
+  end
+
+  def format_hits(hits) do
+    %{hits | hits: Enum.map(hits.hits, &format_document/1)}
+  end
+
+  def format_document(document = %{_source: source}) do
+    case Map.has_key?(document, :_score) do
+      true -> Map.merge source, %{score: document._score, type: document._type}
+      false -> source
     end
   end
 
