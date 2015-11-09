@@ -25,7 +25,6 @@ defmodule Bloodhound.Client do
   Searches an index and optionally a type.
   """
   def search(types \\ nil, data \\ %{}) do
-    IO.puts List.wrap(types) |> build_url("_search")
     List.wrap(types)
     |> build_url("_search")
     |> HTTPoison.post(Poison.encode! data)
@@ -46,7 +45,6 @@ defmodule Bloodhound.Client do
   Parses a response from the ElasticSearch API into a happy map %{:)}.
   """
   def parse_response({status, response}) do
-    IO.inspect response
     body = Poison.Parser.parse! response.body, keys: :atoms
     case status do
       :ok ->
@@ -61,6 +59,7 @@ defmodule Bloodhound.Client do
     end
   end
 
+
   def format_hits(hits) do
     %{hits | hits: Enum.map(hits.hits, &format_document/1)}
   end
@@ -70,6 +69,18 @@ defmodule Bloodhound.Client do
       true -> Map.merge source, %{score: document._score, type: document._type}
       false -> source
     end
+  end
+
+  @doc """
+  Calls ElasticSearch's Refresh API which: "...allows to explicitly refresh one
+  or more indices, making all operations performed since the last refresh
+  available for search".
+  """
+  def refresh(types \\ nil) do
+    List.wrap(types)
+    |> build_url("_refresh")
+    |> HTTPoison.post("")
+    |> parse_response
   end
 
 end
