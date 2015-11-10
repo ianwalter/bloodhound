@@ -25,7 +25,10 @@ defmodule Bloodhound.Document do
       Indexes a model.
       """
       def index(model) do
-        Bloodhound.Client.index index_type, to_map(model, indexed_fields)
+        if Map.has_key? model, :__struct__ do
+          model = to_map model, indexed_fields
+        end
+        Bloodhound.Client.index index_type, model
       end
 
       @doc """
