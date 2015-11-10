@@ -1,5 +1,7 @@
 defmodule Bloodhound.Client do
 
+  alias Poison.Parser
+
   @url Application.get_env :bloodhound, :elasticsearch_url
   @name Application.get_env :bloodhound, :index
 
@@ -44,18 +46,18 @@ defmodule Bloodhound.Client do
   @doc """
   Parses a response from the ElasticSearch API into a happy map %{:)}.
   """
-  def parse_response({status, response}) do
-    body = Poison.Parser.parse! response.body, keys: :atoms
-    case status do
-      :ok ->
+  def parse_response({status, %{body: body, status_code: code}}) do
+    response = %{status_code: code, body: Parser.parse!(body, keys: :atoms)}
+    case {status, code} do
+      {:ok, code} when code in [200, 201, 204] ->
 
-        case body do
+        case response.body do
           %{hits: hits} -> {:ok, format_hits hits}
-          %{_source: _} -> {:ok, format_document body}
-          _ -> {:ok, response.status_code}
+          %{_source: _} -> {:ok, format_document response.body}
+          _ -> {:ok, response}
         end
 
-      _ -> {:error, body}
+      _ -> {:error, response}
     end
   end
 

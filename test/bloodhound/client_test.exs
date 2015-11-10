@@ -24,14 +24,14 @@ defmodule Bloodhound.ClientTest do
   test "a document can be deleted" do
     Client.index "test", %{id: 3, message: "The World At Large"}
     assert {:ok, _} = Client.delete "test", 3
-    assert {:ok, 404} = Client.get "test", 3 # DA FUQ?!
+    assert {:error, %{status_code: 404}} = Client.get "test", 3
   end
 
   test "all documents of a type can be deleted" do
     Client.index "test", %{id: 4, message: "Lampshades On Fire"}
     Client.index "example", %{id: 1, message: "11th Dimension"}
     assert {:ok, _} = Client.delete "test"
-    assert {:ok, 404} = Client.get "test", 4 # DA FUQ?!
+    assert {:error, %{status_code: 404}} = Client.get "test", 4
     assert {:ok, control} = Client.get "example", 1
     assert control.message === "11th Dimension"
   end
@@ -40,8 +40,8 @@ defmodule Bloodhound.ClientTest do
     Client.index "test", %{id: 5, message: "Lampshades On Fire"}
     Client.index "example", %{id: 2, message: "11th Dimension"}
     assert {:ok, _} = Client.delete
-    assert {:ok, 404} = Client.get "test", 5 # DA FUQ?!
-    assert {:ok, 404} = Client.get "example", 2 # DA FUQ?!
+    assert {:error, %{status_code: 404}} = Client.get "test", 5
+    assert {:error, %{status_code: 404}} = Client.get "example", 2
   end
 
   test "searching for documents by type returns documents of that type" do

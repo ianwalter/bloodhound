@@ -31,7 +31,8 @@ defmodule Bloodhound.Mixfile do
       {:httpoison, "~> 0.7.2"},
       {:poison, "~> 1.5"},
       {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.10", only: :dev}
+      {:ex_doc, "~> 0.10", only: :dev},
+      {:ecto, "~> 1.0", only: :test}
     ]
   end
 end
