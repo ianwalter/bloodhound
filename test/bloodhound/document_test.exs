@@ -3,19 +3,7 @@ defmodule Bloodhound.DocumentTest do
 
   alias Bloodhound.Client
   alias Bloodhound.Document
-
-  defmodule ExampleModel do
-    use Document
-    use Ecto.Model
-
-    import Ecto.Changeset
-
-    schema "example_models" do
-      field :message, :string
-    end
-
-    indexed_fields ~w(id message)
-  end
+  alias Bloodhound.ExampleModel
 
   setup do
     Client.delete

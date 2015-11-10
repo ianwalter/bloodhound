@@ -4,11 +4,16 @@ defmodule Bloodhound.Mixfile do
   def project do
     [app: :bloodhound,
      version: "0.0.1",
-     elixir: "~> 1.1",
+     elixir: "~> 1.0",
+     elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_),     do: ["lib"]
 
   # Configuration for the OTP application
   #
