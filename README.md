@@ -1,6 +1,6 @@
 # bloodhound [![Build Status](https://semaphoreci.com/api/v1/projects/fa1c4a2b-05b4-422e-8365-0875cc386dd4/598201/shields_badge.svg)](https://semaphoreci.com/ianwalter/bloodhound)
 
-**TODO: Add description**
+**An ElasticSearch library for Elixir that can be easily integrated with Ecto**
 
 ## Installation
 

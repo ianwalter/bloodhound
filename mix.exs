@@ -1,14 +1,33 @@
 defmodule Bloodhound.Mixfile do
   use Mix.Project
 
+  defp package do
+    [
+      files: ["lib", "mix.exs", "README.md", "LICENSE"],
+      maintainers: ["Ian Walter"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/ianwalter/bloodhound"}
+    ]
+  end
+
+  defp description do
+    """
+    An ElasticSearch library for Elixir that can be easily integrated with Ecto
+    """
+  end
+
   def project do
-    [app: :bloodhound,
-     version: "0.0.1",
-     elixir: "~> 1.0",
-     elixirc_paths: elixirc_paths(Mix.env),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps]
+    [
+      app: :bloodhound,
+      version: "0.0.1",
+      elixir: "~> 1.0",
+      elixirc_paths: elixirc_paths(Mix.env),
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      deps: deps,
+      description: description,
+      package: package
+    ]
   end
 
   # Specifies which paths to compile per environment.
