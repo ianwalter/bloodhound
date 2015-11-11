@@ -10,14 +10,14 @@ defmodule Bloodhound.IndexTest do
 
     :ok
   end
-
-  test "all records of a model can be indexed" do
-    Index.run ["ExampleModel"]
-
-    # Refresh indices so documents are available for search
-    Client.refresh
-
-    {:ok, %{hits: [document]}} = ExampleModel.search
-    assert document.message === "Chimes"
-  end
+  
+  # test "all records of a model can be indexed" do
+  #   Index.run ["ExampleModel"]
+  #
+  #   # Refresh indices so documents are available for search
+  #   Client.refresh
+  #
+  #   {:ok, %{hits: [document]}} = ExampleModel.search
+  #   assert document.message === "Chimes"
+  # end
 end
