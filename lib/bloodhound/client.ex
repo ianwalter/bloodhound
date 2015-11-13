@@ -59,10 +59,12 @@ defmodule Bloodhound.Client do
     case status do
       :ok ->
 
-        case body = Parser.parse!(body, keys: :atoms) do
+        case body = Parser.parse!(response.body, keys: :atoms) do
           %{hits: hits} -> {:ok, format_hits hits}
           %{_source: _} -> {:ok, format_document body}
           %{error: _} -> {:error, body}
+          %{found: false} -> {:error, body}
+          _ -> {:ok, body}
         end
 
       _ -> {:error, response}
