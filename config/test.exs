@@ -1,3 +1,7 @@
 use Mix.Config
 
-config :bloodhound, index: "bloodhound_test"
+config :logger, level: :info
+
+config :bloodhound,
+  elasticsearch_url: "http://localhost:9200",
+  index: "bloodhound_test"

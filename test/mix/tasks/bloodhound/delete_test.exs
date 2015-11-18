@@ -23,6 +23,9 @@ defmodule Bloodhound.DeleteTest do
     Client.index "test", %{id: 2, message: "All of the Lights"}
     ExampleModel.index %ExampleModel{id: 1, message: "Through the Wire"}
     Delete.run ["Bloodhound.ExampleModel"]
+
+    :timer.sleep(1)
+
     assert {:ok, document} = Client.get "test", 2
     assert document.message === "All of the Lights"
     assert {:error, _} = ExampleModel.get_index 1

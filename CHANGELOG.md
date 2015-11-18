@@ -1,5 +1,9 @@
 # Changes to Bloodhound
 
+## v0.0.4
+
+* Cleaning up configuration
+
 ## v0.0.3
 
 * Fixing delete_index warning
