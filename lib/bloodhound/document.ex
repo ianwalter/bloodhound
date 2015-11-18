@@ -40,15 +40,13 @@ defmodule Bloodhound.Document do
 
       @doc """
       """
-      def delete_index(changeset = %{model: model}) do
-        delete_index model.id
-        changeset
-      end
-
-      @doc """
-      """
-      def delete_index(id) do
-        Bloodhound.Client.delete index_type, id
+      def delete_index(changeset \\ nil) do
+        case changeset do
+          changeset when is_map(changeset) ->
+            Bloodhound.Client.delete index_type, changeset.model.id
+            changeset
+          id -> Bloodhound.Client.delete index_type, id
+        end
       end
 
       @doc """

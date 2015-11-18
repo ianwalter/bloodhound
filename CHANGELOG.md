@@ -1,5 +1,10 @@
 # Changes to Bloodhound
 
+## v0.0.3
+
+* Fixing delete_index warning
+* Bumping HTTPoison version
+
 ## v0.0.2
 
 * Simplifying `parse_response` function
