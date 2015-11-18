@@ -4,29 +4,23 @@ defmodule Mix.Tasks.Bloodhound.Index do
   alias Bloodhound.Client
 
   def run(options) do
-    mixfile = Mix.Project.get()
-    {_, app} = Enum.at mixfile.project, 0
-
-    {:ok, _} = Application.ensure_all_started :bloodhound
+    # {:ok, _} = Application.ensure_all_started :bloodhound
 
     case options do
-      # [module_name] ->
-        # Build Model and Repo modules
-        # [app_module, _] = Module.split mixfile
-        # repo = Module.concat app_module, Repo
-        # model = Module.concat app_module, module_name
+      [module_name] ->
+        # TODO http://stackoverflow.com/questions/33644132/how-can-i-make-a-module-from-the-current-project-available-inside-of-dependency/33644510#33644510
 
-        # IO.inspect Code.load_binary(:elector)
-
-        # apply(repo, :all, [model])
-
-        # Get all model records
-        # models = Mix.Project.in_project(:elector, ".", [], fn() -> repo.all(model) end)
+        # # Build Model and Repo modules
+        # [app, _] = Module.split Mix.Project.get()
+        # repo = Module.concat app, Repo
+        # model = Module.concat app, module_name
+        #
+        # # Get all model records
         # models = repo.all model
-
-        # Index each record
+        #
+        # # Index each record
         # Enum.each models, &model.index/1
-
+        #
         # count = Enum.count models
         # Mix.shell.info [:green, "Indexed #{count} #{model.index_type}"]
     end

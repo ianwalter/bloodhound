@@ -5,13 +5,22 @@ defmodule Bloodhound.Client do
   @url Application.get_env :bloodhound, :elasticsearch_url
   @name Application.get_env :bloodhound, :index
 
+  @doc """
+  Indexes a document by inferring that it's ID is within it's data map.
+  """
   def index(type, data), do: index(type, data.id, data)
 
+  @doc """
+  Adds a document to the index given it's type, ID, and a map with it's data.
+  """
   def index(type, id, data) do
     encoded_data = Poison.encode! data
     type |> build_url(id) |> HTTPoison.put(encoded_data) |> parse_response
   end
 
+  @doc """
+  Gets a document given it's type and ID.
+  """
   def get(type, id) do
     type |> build_url(id) |> HTTPoison.get |> parse_response
   end
@@ -24,7 +33,7 @@ defmodule Bloodhound.Client do
   end
 
   @doc """
-  Searches an index and optionally a type.
+  Searches an index and optionally index types.
   """
   def search(types \\ nil, data \\ %{}) do
     List.wrap(types)
@@ -46,22 +55,25 @@ defmodule Bloodhound.Client do
   @doc """
   Parses a response from the ElasticSearch API into a happy map %{:)}.
   """
-  def parse_response({status, %{body: body, status_code: code}}) do
-    response = %{status_code: code, body: Parser.parse!(body, keys: :atoms)}
-    case {status, code} do
-      {:ok, code} when code in [200, 201, 204] ->
+  def parse_response({status, response}) do
+    case status do
+      :ok ->
 
-        case response.body do
+        case body = Parser.parse!(response.body, keys: :atoms) do
           %{hits: hits} -> {:ok, format_hits hits}
-          %{_source: _} -> {:ok, format_document response.body}
-          _ -> {:ok, response}
+          %{_source: _} -> {:ok, format_document body}
+          %{error: _} -> {:error, body}
+          %{found: false} -> {:error, body}
+          _ -> {:ok, body}
         end
 
       _ -> {:error, response}
     end
   end
 
-
+  @doc """
+  Formats documents in search results to look like the models they represent.
+  """
   def format_hits(hits) do
     %{hits | hits: Enum.map(hits.hits, &format_document/1)}
   end

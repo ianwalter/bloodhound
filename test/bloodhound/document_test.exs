@@ -30,7 +30,7 @@ defmodule Bloodhound.DocumentTest do
     changeset = %{ model: %ExampleModel{id: 3, message: "Lines In The Suit"} }
     ExampleModel.index changeset
     assert changeset === ExampleModel.delete_index changeset
-    assert {:error, %{status_code: 404}} = ExampleModel.get_index 2
+    assert {:error, _} = ExampleModel.get_index 2
   end
 
   test "searching by model will return document of it's type" do
