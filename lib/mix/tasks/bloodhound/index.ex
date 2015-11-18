@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Bloodhound.Index do
   use Mix.Task
 
-  alias Bloodhound.Client
+#  alias Bloodhound.Client
 
   def run(options) do
     # {:ok, _} = Application.ensure_all_started :bloodhound
