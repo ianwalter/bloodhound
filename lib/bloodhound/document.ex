@@ -47,7 +47,7 @@ defmodule Bloodhound.Document do
 
       @doc """
       """
-      def delete_index(id \\ nil) do
+      def delete_index(id) do
         Bloodhound.Client.delete index_type, id
       end
 
