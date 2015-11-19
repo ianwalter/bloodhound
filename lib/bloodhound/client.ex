@@ -1,6 +1,7 @@
 defmodule Bloodhound.Client do
 
   alias Poison.Parser
+  alias Bloodhound.Utility
 
   @url Application.get_env :bloodhound, :elasticsearch_url
   @name Application.get_env :bloodhound, :index
@@ -50,6 +51,7 @@ defmodule Bloodhound.Client do
     List.flatten([@url, @name, type, id])
     |> Enum.filter(&(&1))
     |> Enum.join("/")
+    |> Utility.debug_piped("Built URL:")
   end
 
   @doc """

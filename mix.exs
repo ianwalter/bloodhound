@@ -19,7 +19,7 @@ defmodule Bloodhound.Mixfile do
   def project do
     [
       app: :bloodhound,
-      version: "0.0.4",
+      version: "0.0.5",
       elixir: "~> 1.0",
       elixirc_paths: elixirc_paths(Mix.env),
       build_embedded: Mix.env == :prod,
