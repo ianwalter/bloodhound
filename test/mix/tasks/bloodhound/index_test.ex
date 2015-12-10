@@ -3,21 +3,21 @@ defmodule Bloodhound.IndexTest do
 
   alias Bloodhound.Client
   alias Mix.Tasks.Bloodhound.Index
-  alias Bloodhound.ExampleModel
+  alias Bloodhound.Artist
 
   setup do
     Client.delete
 
     :ok
   end
-  
+
   # test "all records of a model can be indexed" do
-  #   Index.run ["ExampleModel"]
+  #   Index.run ["Artist"]
   #
   #   # Refresh indices so documents are available for search
   #   Client.refresh
   #
-  #   {:ok, %{hits: [document]}} = ExampleModel.search
-  #   assert document.message === "Chimes"
+  #   {:ok, %{hits: [document]}} = Artist.search
+  #   assert document.name === "Phoenix"
   # end
 end

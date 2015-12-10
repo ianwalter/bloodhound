@@ -15,8 +15,11 @@ defmodule Bloodhound.Client do
   Adds a document to the index given it's type, ID, and a map with it's data.
   """
   def index(type, id, data) do
-    encoded_data = Poison.encode! data
-    type |> build_url(id) |> HTTPoison.put(encoded_data) |> parse_response
+    type
+    |> build_url(id)
+    |> HTTPoison.post(Poison.encode!(data))
+    |> parse_response
+    |> Utility.debug_piped("Index response: ")
   end
 
   @doc """
@@ -61,12 +64,16 @@ defmodule Bloodhound.Client do
     case status do
       :ok ->
 
-        case body = Parser.parse!(response.body, keys: :atoms) do
-          %{hits: hits} -> {:ok, format_hits hits}
-          %{_source: _} -> {:ok, format_document body}
-          %{error: _} -> {:error, body}
-          %{found: false} -> {:error, body}
-          _ -> {:ok, body}
+        if String.first(response.body) === "{" do
+          case body = Parser.parse!(response.body, keys: :atoms) do
+            %{hits: hits} -> {:ok, format_hits hits}
+            %{_source: _} -> {:ok, format_document body}
+            %{error: _} -> {:error, body}
+            %{found: false} -> {:error, body}
+            _ -> {:ok, body}
+          end
+        else
+          {:error, response}
         end
 
       _ -> {:error, response}

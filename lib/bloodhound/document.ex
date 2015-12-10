@@ -14,14 +14,6 @@ defmodule Bloodhound.Document do
       def index_type, do: __MODULE__.__schema__(:source)
 
       @doc """
-      Indexes a model within a given changeset.
-      """
-      def index(changeset = %{model: model}) do
-        index model
-        changeset
-      end
-
-      @doc """
       Indexes a model.
       """
       def index(model) do
@@ -32,7 +24,7 @@ defmodule Bloodhound.Document do
       end
 
       @doc """
-      Indexes a model.
+      TODO
       """
       def get_index(id) do
         Bloodhound.Client.get index_type, id
@@ -40,11 +32,9 @@ defmodule Bloodhound.Document do
 
       @doc """
       """
-      def delete_index(changeset \\ nil) do
-        case changeset do
-          changeset when is_map(changeset) ->
-            Bloodhound.Client.delete index_type, changeset.model.id
-            changeset
+      def delete_index(model \\ nil) do
+        case model do
+          m when is_map(m) -> Bloodhound.Client.delete index_type, m.id
           id -> Bloodhound.Client.delete index_type, id
         end
       end
