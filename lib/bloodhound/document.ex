@@ -17,10 +17,7 @@ defmodule Bloodhound.Document do
       Indexes a model.
       """
       def index(model) do
-        if Map.has_key? model, :__struct__ do
-          model = to_map model, indexed_fields
-        end
-        Bloodhound.Client.index index_type, model
+        Bloodhound.Client.index index_type, to_index_map(model)
       end
 
       @doc """
@@ -42,15 +39,32 @@ defmodule Bloodhound.Document do
       @doc """
       """
       def search(query \\ %{}), do: Bloodhound.Client.search(index_type, query)
-    end
-  end
 
-  @doc """
-  """
-  def to_map(model, fields \\ nil) do
-    case fields do
-      nil -> Map.from_struct model
-      fields -> model |> Map.from_struct |> Map.take(fields)
+      @doc """
+      """
+      def to_index_map({key, value}) do
+        if is_map(value) do
+          {key, to_index_map(value)}
+        else
+          {key, value}
+        end
+      end
+
+      @doc """
+      """
+      def to_index_map(model) when is_map(model) do
+        if Map.has_key? model, :__struct__ do
+          case {:indexed_fields, 0} in model.__struct__.__info__(:functions) do
+            true ->
+              model = model
+              |> Map.from_struct
+              |> Map.take(model.__struct__.indexed_fields)
+            false -> model = Map.from_struct model
+          end
+        end
+        Enum.into Enum.map(model, &to_index_map/1), %{}
+      end
+
     end
   end
 
