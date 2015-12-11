@@ -1,5 +1,9 @@
 # Changes to Bloodhound
 
+## v0.1.1
+
+* #3: Don't add data from Ecto.Association.NotLoaded
+
 ## v0.1.0
 
 * #1: Handle model associations

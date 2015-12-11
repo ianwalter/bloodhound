@@ -55,14 +55,22 @@ defmodule Bloodhound.Document do
       def to_index_map(model) when is_map(model) do
         if Map.has_key? model, :__struct__ do
           case {:indexed_fields, 0} in model.__struct__.__info__(:functions) do
+
             true ->
               model = model
               |> Map.from_struct
               |> Map.take(model.__struct__.indexed_fields)
-            false -> model = Map.from_struct model
+
+            false ->
+              case model.__struct__ !== Ecto.Association.NotLoaded do
+                true -> model = Map.from_struct model
+                false -> model = nil
+              end
+
           end
         end
-        Enum.into Enum.map(model, &to_index_map/1), %{}
+
+        if model !== nil, do: Enum.into(Enum.map(model, &to_index_map/1), %{})
       end
 
     end
