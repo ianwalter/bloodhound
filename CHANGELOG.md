@@ -1,5 +1,10 @@
 # Changes to Bloodhound
 
+## v0.1.0
+
+* #1: Handle model associations
+* #2: Remove support for after_insert, after_udpate, after_delete model hooks
+
 ## v0.0.4
 
 * Cleaning up configuration

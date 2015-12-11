@@ -10,7 +10,7 @@ package can be installed as:
   1. Add bloodhound to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:bloodhound, "~> 0.0.2"}]
+          [{:bloodhound, "~> 0.1.0"}]
         end
 
   2. Ensure bloodhound is started before your application:
