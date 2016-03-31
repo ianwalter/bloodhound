@@ -3,9 +3,6 @@ defmodule Bloodhound.Client do
   alias Poison.Parser
   alias Bloodhound.Utility
 
-  @url Application.get_env :bloodhound, :elasticsearch_url
-  @name Application.get_env :bloodhound, :index
-
   @doc """
   Indexes a document by inferring that it's ID is within it's data map.
   """
@@ -51,7 +48,9 @@ defmodule Bloodhound.Client do
     TODO add params
   """
   def build_url(type, id \\ nil) do
-    List.flatten([@url, @name, type, id])
+    url = Application.get_env :bloodhound, :elasticsearch_url
+    index = Application.get_env :bloodhound, :index
+    List.flatten([url, index, type, id])
     |> Enum.filter(&(&1))
     |> Enum.join("/")
     |> Utility.debug_piped("Built URL:")
